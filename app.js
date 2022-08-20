@@ -125,20 +125,26 @@ const delUserById = (req, res) => {
     })
 }
 
-app.route('/api/tours')
+const tourRoute = express.Router();
+const userRoute = express.Router();
+
+app.use('/api/tours', tourRoute);
+app.use('/api/users', userRoute);
+
+tourRoute.route('/')
     .get(getAllTours)
     .post(postTour)
 
-app.route('/api/tours/:id')
+tourRoute.route('/:id')
     .get(getTourById)
     .patch(patchTourById)
     .delete(delTourById)
 
-app.route('/api/users')
+userRoute.route('/')
     .get(getAllUsers)
     .post(postUser)
 
-app.route('/api/users/:id')
+userRoute.route('/:id')
     .get(getUserById)
     .patch(patchUserById)
     .delete(delUserById)
