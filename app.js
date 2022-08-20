@@ -10,7 +10,7 @@ app.use(express.json())
 
 const tours = JSON.parse(fs.readFileSync(toursSimple))
 
-app.get('/api/tours', (req, res) => {
+const getAllTours = (requ, res) => {
     res
         .status(200)
         .json({
@@ -20,9 +20,9 @@ app.get('/api/tours', (req, res) => {
                 tours
             }
         })
-})
+}
 
-app.get('/api/tours/:id', (req, res) => {
+const getTourById = (req, res) => {
     const id = parseInt(req.params.id)
     const tour = tours.find(tr => tr.id === id)
 
@@ -36,10 +36,9 @@ app.get('/api/tours/:id', (req, res) => {
             message: 'Success',
             data: tour
         })
+}
 
-})
-
-app.post('/api/tours', (req, res) => {
+const postTour = (req, res) => {
 
     const newID = tours[tours.length - 1].id + 1
     const newTour = { id: newID, ...req.body }
@@ -53,9 +52,9 @@ app.post('/api/tours', (req, res) => {
                 data: newTour
             })
     })
-})
+}
 
-app.patch('/api/tours/:id', (req, res) => {
+const patchTourById = (req, res) => {
     const id = parseInt(req.params.id)
 
     if (id > tours.length || !id) {
@@ -70,9 +69,9 @@ app.patch('/api/tours/:id', (req, res) => {
         message: 'Patching Success',
         data: 'Updated'
     })
-})
+}
 
-app.delete('/api/tours/:id', (req, res) => {
+const delTourById = (req, res) => {
     const id = parseInt(req.params.id)
 
     if (id > tours.length || !id) {
@@ -87,7 +86,16 @@ app.delete('/api/tours/:id', (req, res) => {
         message: 'Patching Success',
         data: null
     })
-})
+}
+
+app.route('/api/tours')
+    .get(getAllTours)
+    .post(postTour)
+
+app.route('/api/tours/:id')
+    .get(getTourById)
+    .patch(patchTourById)
+    .delete(delTourById)
 
 app.listen(PORT, () => {
     console.log(`App is running on ${PORT}`)
